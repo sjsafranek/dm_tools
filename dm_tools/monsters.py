@@ -1,4 +1,5 @@
 import os
+import json
 import math
 from dm_tools.utils import csv2dict
 from dm_tools.utils import filterDictList
@@ -28,6 +29,7 @@ def getMonsterByName(name):
 
 
 class Monster(object):
+
     def __init__(self, monster):
         self._data = monster
         self.name = monster['Name']
@@ -48,6 +50,10 @@ class Monster(object):
         self.speed = monster['speed']
         self.page = monster['Page']
         self.hp = self.getHP()
+        self.special_abilties = Actions(self._data['special_abilties'])
+        self.reactions = Actions(self._data['reactions'])
+        self.actions = Actions(self._data['actions'])
+        self.legnedary_actions = Actions(self._data['legnedary_actions'])
 
     def getHP(self):
         source = self._data['hp_source']
@@ -90,6 +96,23 @@ class Monster(object):
             amount = 0
         self.hp -= amount
 
+
+class Actions(object):
+
+    def __init__(self, actions):
+        self.actions = {}
+        self._data = []
+        actions = actions.replace(';',',')
+        if actions and '' != actions:
+            self._data = json.loads(actions)
+            for action in self._data:
+                self.actions[action['Name']] = action
+
+    def getActions(self):
+        return list(self.actions.keys())
+
+
+
 """
 
 import dm_tools
@@ -101,20 +124,26 @@ monsters = dm_tools.monsters.getMonsterByName("Ancient Red Dragon")
 dragon = dm_tools.monsters.Monster(monsters[0])
 
 
- 'special_abilties'
-  'special_abilties': '[{"Name":"Nimble Escape";"Desc":"The goblin can take the Disengage or Hide action as a bonus action on each of its turns."}]'
+
+
+
+'special_abilties': '[{"Name":"Nimble Escape";"Desc":"The goblin can take the Disengage or Hide action as a bonus action on each of its turns."}]'
+'reactions': ''
+'actions': '[{"Name":"Scimitar";"Type Attack":"Weapon Attack";"Type":"Melee";"Hit Bonus":"4";"Reach":"5 ft.";"Target":"one target";"Damage":"1d6 + 2";"Damage Type":"slashing"};{"Name":"Shortbow";"Type Attack":"Weapon Attack";"Type":"Ranged";"Hit Bonus":"4";"Reach":"80/320 ft.";"Target":"one target";"Damage":"1d6 + 2";"Damage Type":"piercing"}]'
+legnedary_actions
+
+
    'Source': 'MM'
    'launguages': 'Common; Goblin'
    'SRD': 'Y'
    'condition_immunities': ''
-   'reactions': ''
-   'actions': '[{"Name":"Scimitar";"Type Attack":"Weapon Attack";"Type":"Melee";"Hit Bonus":"4";"Reach":"5 ft.";"Target":"one target";"Damage":"1d6 + 2";"Damage Type":"slashing"};{"Name":"Shortbow";"Type Attack":"Weapon Attack";"Type":"Ranged";"Hit Bonus":"4";"Reach":"80/320 ft.";"Target":"one target";"Damage":"1d6 + 2";"Damage Type":"piercing"}]'
+
    'Environment': 'Forest; Grassland; Hills; Underdark'
    'Reference': 'MM166'
    'armor_type': 'Leather Armor; Shield'
    'vulnerabilities': ''
    'passive_perception': '9.0'
-   'legnedary_actions': ''
+
 
 
    'Tags/Lair': 'goblinoid'
