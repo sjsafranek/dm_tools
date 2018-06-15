@@ -1,4 +1,5 @@
 import os
+import math
 from dm_tools.utils import csv2dict
 from dm_tools.utils import filterDictList
 import dm_tools.dice as dice
@@ -28,6 +29,7 @@ def getMonsterByName(name):
 
 class Monster(object):
     def __init__(self, monster):
+        self._data = monster
         self.name = monster['Name']
         self.type = monster['type']
         self.xp = float(monster['xp'])
@@ -39,8 +41,31 @@ class Monster(object):
             'WIS': int(float(monster['wis'])),
             'CHA': int(float(monster['cha']))
         }
-        self.ac = monster['armor_class'] #'15.0'
-        self._data = monster
+        self.ac = int(float(monster['armor_class']))
+        self.alignment = monster['alignment']
+        self.size = monster['size']
+        self.cr = monster['cr']
+        self.speed = monster['speed']
+        self.page = monster['Page']
+        self.hp = self.getHP()
+
+    def getHP(self):
+        source = self._data['hp_source']
+        parts = source.split('d')
+        n = int(parts[0])
+        d = parts[1]
+        m = 0
+        if '-' in d:
+            arr = d.split('-')
+            d = arr[0]
+            m = arr[1]
+        if '+' in d:
+            arr = d.split('+')
+            d = arr[0]
+            m = arr[1]
+        d = int(d)
+        m = int(m)
+        return dice.rollDice(n, d) + m
 
     def getAbilityMod(self, ability):
         score = self.abilities[ability.upper()]
@@ -58,6 +83,13 @@ class Monster(object):
             return max([ dice.d20(), dice.d20() ]) + self.getSave(ability)
         return dice.d20() + self.getSave(ability)
 
+    def dealDamage(self, dmgType, amount):
+        if dmgType.lower() in self._data['damage_resistances'].lower():
+            amount = math.ceil(amount/2)
+        elif dmgType.lower() in self._data['damage_immunities'].lower():
+            amount = 0
+        self.hp -= amount
+
 """
 
 import dm_tools
@@ -65,18 +97,17 @@ import dm_tools
 monsters = dm_tools.monsters.getMonsterByName("Goblin")
 goblin = dm_tools.monsters.Monster(monsters[0])
 
+monsters = dm_tools.monsters.getMonsterByName("Ancient Red Dragon")
+dragon = dm_tools.monsters.Monster(monsters[0])
+
 
  'special_abilties'
   'special_abilties': '[{"Name":"Nimble Escape";"Desc":"The goblin can take the Disengage or Hide action as a bonus action on each of its turns."}]'
    'Source': 'MM'
    'launguages': 'Common; Goblin'
-   'hp_average': '7.0'
    'SRD': 'Y'
-   'hp_source': '2d6'
    'condition_immunities': ''
    'reactions': ''
-   'speed': '30 ft.'
-   'Page': '166.0'
    'actions': '[{"Name":"Scimitar";"Type Attack":"Weapon Attack";"Type":"Melee";"Hit Bonus":"4";"Reach":"5 ft.";"Target":"one target";"Damage":"1d6 + 2";"Damage Type":"slashing"};{"Name":"Shortbow";"Type Attack":"Weapon Attack";"Type":"Ranged";"Hit Bonus":"4";"Reach":"80/320 ft.";"Target":"one target";"Damage":"1d6 + 2";"Damage Type":"piercing"}]'
    'Environment': 'Forest; Grassland; Hills; Underdark'
    'Reference': 'MM166'
@@ -84,12 +115,7 @@ goblin = dm_tools.monsters.Monster(monsters[0])
    'vulnerabilities': ''
    'passive_perception': '9.0'
    'legnedary_actions': ''
-   'damage_resistances': ''
-   'alignment': 'Neutral Evil'
-   'size': 'Small'
 
-   'cr': '1/4'
-   'damage_immunities': ''
 
    'Tags/Lair': 'goblinoid'
    'senses': 'Darkvision 60 Ft.'
