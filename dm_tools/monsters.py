@@ -96,6 +96,9 @@ class Monster(object):
             amount = 0
         self.hp -= amount
 
+    def rollInitiative(self):
+        return dice.d20() + self.getAbilityMod('DEX')
+
 
 class Actions(object):
 
@@ -119,6 +122,7 @@ import dm_tools
 
 monsters = dm_tools.monsters.getMonsterByName("Goblin")
 goblin = dm_tools.monsters.Monster(monsters[0])
+goblin.rollInitiative()
 
 monsters = dm_tools.monsters.getMonsterByName("Ancient Red Dragon")
 dragon = dm_tools.monsters.Monster(monsters[0])
