@@ -2,7 +2,7 @@ import os
 import json
 import math
 from dm_tools.utils import csv2dict
-from dm_tools.utils import filterDictList
+from dm_tools.utils import filterDictList, filterDictListFuzzy
 import dm_tools.dice as dice
 
 data_dir = os.path.join(
@@ -25,7 +25,7 @@ def getMonstersByCR(cr):
     return filterDictList(tables['MONSTERS'], 'cr', cr)
 
 def getMonsterByName(name):
-    return filterDictList(tables['MONSTERS'], 'Name', name)
+    return filterDictListFuzzy(tables['MONSTERS'], 'Name', name)
 
 
 class Monster(object):
@@ -119,6 +119,10 @@ class Actions(object):
 """
 
 import dm_tools
+
+monsters = dm_tools.monsters.getMonsterByName("dragon")
+dragon = dm_tools.monsters.Monster(monsters[0])
+
 
 monsters = dm_tools.monsters.getMonsterByName("Goblin")
 goblin = dm_tools.monsters.Monster(monsters[0])

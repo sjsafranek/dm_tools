@@ -18,3 +18,10 @@ def csv2dict(file):
 
 def filterDictList(table, attr, value):
     return [elem for elem in table if elem[attr] == value]
+
+def filterDictListFuzzy(table, attr, value):
+    return [
+        elem
+        for elem in table
+        if str(value).lower() in str(elem[attr]).lower()
+    ]
