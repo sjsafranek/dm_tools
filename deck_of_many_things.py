@@ -1,4 +1,6 @@
 import random
+import json
+# import pickle
 
 '''
 https://roll20.net/compendium/dnd5e/Deck%20of%20Many%20Things#content
@@ -167,4 +169,8 @@ class DeckOfManyThings(object):
     def size(self):
         return len(list(self.deck.keys()))
 
-    # def to_csv(self):
+    def save(self, outfile):
+        json.dump( self.deck, open( outfile + ".deck", "wb" ) )
+
+    def load(self, infile):
+        self.deck = json.load( open( infile + ".deck", "rb" ) )
