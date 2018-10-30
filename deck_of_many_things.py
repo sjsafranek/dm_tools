@@ -170,7 +170,7 @@ class DeckOfManyThings(object):
         return len(list(self.deck.keys()))
 
     def save(self, outfile):
-        json.dump( self.deck, open( outfile + ".deck", "wb" ) )
+        json.dump( self.deck, open( outfile + ".deck", "w" ) )
 
     def load(self, infile):
-        self.deck = json.load( open( infile + ".deck", "rb" ) )
+        self.deck = json.load( open( infile + ".deck", "r" ) )
