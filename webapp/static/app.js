@@ -1,6 +1,8 @@
 
 var App = function() {
-    this.nameGeneratorUi = new NameGeneratorUi();
-    this.treasureUi = new TreasureUi();
-    this.initativeTrackerUi = new InitativeTrackerUi();
+
+    for (var i in DM.tools) {
+        this[i] = new DM.tools[i];
+    }
+    
 }

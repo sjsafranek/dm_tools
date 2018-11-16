@@ -1,6 +1,5 @@
 <html>
     <head>
-        <!-- <title>DM Tools :: DM Screen</title> -->
         <title>DM Screen</title>
         <script src="https://d3js.org/d3.v5.min.js"></script>
 
@@ -83,19 +82,14 @@
 
         <!-- <div class="container"></div> -->
 
-        <script src="{{ url_for('static', filename = 'dm-tool.js') }}"></script>
+        <script src="{{ url_for('static', filename = 'DM.js') }}"></script>
         <script src="{{ url_for('static', filename = 'name-generator/name-generator.js') }}"></script>
         <script src="{{ url_for('static', filename = 'treasure-generator/treasure-generator.js') }}"></script>
+        <script src="{{ url_for('static', filename = 'treasure-generator/treasure-database.js') }}"></script>
         <script src="{{ url_for('static', filename = 'initiative-tracker/initiative-tracker.js') }}"></script>
         <script src="{{ url_for('static', filename = 'app.js') }}"></script>
 
         <script>
-
-            var db = new Database();
-            db.loadTable("art_and_gemstones", "{{ url_for('static', filename = 'treasure-generator/data/ART_AND_GEMSTONES.csv') }}");
-            db.loadTable("hoard_treasure", "{{ url_for('static', filename = 'treasure-generator/data/HOARD_TREASURE.csv') }}");
-            db.loadTable("individual_treasure", "{{ url_for('static', filename = 'treasure-generator/data/INDIVIDUAL_TREASURE.csv') }}");
-            db.loadTable("magic_items", "{{ url_for('static', filename = 'treasure-generator/data/MAGIC_ITEMS.csv') }}");
 
             var app;
             $(function(){
