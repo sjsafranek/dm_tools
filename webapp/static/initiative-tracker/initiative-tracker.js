@@ -97,9 +97,10 @@ var InitativeTrackerUi = function() {
             characterInitativeContainer.append(
                 self.initativeTracker._order.map(function(d, i){
                     return $("<li>")
-                        .addClass("list-group-item characterInitative " + (d.active ? "" : "disabled") + " " + (self.initativeTracker.index==i ? "active": ""))
+                        .addClass("list-group-item d-flex justify-content-between align-items-center " + (d.active ? "" : "disabled") + " " + (self.initativeTracker.index==i ? "list-group-item-primary": ""))
                         .append(
                             d.name,
+                            $("<span>").addClass("badge badge-primary badge-pill").append(d.initative),
                             $("<button>")
                                 .addClass("btn btn-default btn-sm")
                                 .css("float", "right")
@@ -108,7 +109,7 @@ var InitativeTrackerUi = function() {
                                 )
                                 .on("click", function(){
                                     self.initativeTracker.remove(d.name);
-                                    $(this).parent().removeClass("active");
+                                    $(this).parent().removeClass("list-group-item-primary");
                                     $(this).parent().addClass("disabled");
                                 })
                         )
@@ -120,13 +121,21 @@ var InitativeTrackerUi = function() {
         });
 
     var nextCharacterButton = $("<button>")
-        .addClass("btn btn-primary btn-sm nextCharacterInitative")
+        .addClass("btn btn-primary btn-sm")
         .append("Next")
         .on("click", function() {
             self.initativeTracker.next();
-            characterInitativeContainer.find("li").removeClass("active");
+            characterInitativeContainer.find("li").removeClass("list-group-item-primary");
             var i = self.initativeTracker.index;
-            $(characterInitativeContainer.find("li")[i]).addClass("active");
+            $(characterInitativeContainer.find("li")[i]).addClass("list-group-item-primary");
+        });
+
+    var clearInitativeButton = $("<button>")
+        .addClass("btn btn-warning btn-sm")
+        .append("Clear")
+        .on("click", function(){
+            self.initativeTracker.clear();
+            characterInitativeContainer.empty();
         });
 
     this.content = $("<div>")
@@ -147,7 +156,10 @@ var InitativeTrackerUi = function() {
                     addCharacterButton
                 ),
             characterInitativeContainer,
-            nextCharacterButton
+            $("<div>").addClass("initativeControls").append(
+                clearInitativeButton,
+                nextCharacterButton
+            )
         );
 
     this.container = makeDMToolUi({
