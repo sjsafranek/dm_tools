@@ -77,9 +77,9 @@ var DM = {
                 );
 
             $container
-                .css({
-                    "width": "544px"
-                })
+                // .css({
+                //     "width": "544px"
+                // })
                 .draggable({
                     containment: "body",
                     scroll: false
